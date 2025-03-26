@@ -1,6 +1,7 @@
 package estudo.tedw.agregadorinvestimentos.service;
 
 import estudo.tedw.agregadorinvestimentos.controller.CreateUserDto;
+import estudo.tedw.agregadorinvestimentos.controller.UpdateUserDto;
 import estudo.tedw.agregadorinvestimentos.entity.User;
 import estudo.tedw.agregadorinvestimentos.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -38,6 +39,25 @@ public class UserService {
 
     public List<User> listUsers() {
         return userRepository.findAll();
+    }
+
+    public void updateUserById(String userID, UpdateUserDto updateUserDto) {
+        var ID = UUID.fromString(userID);
+        var userEntity = userRepository.findById(ID);
+
+        if (userEntity.isPresent()) {
+            var user = userEntity.get();
+
+            if (updateUserDto.username() != null) {
+                user.setUsername(updateUserDto.username());
+            }
+
+            if (updateUserDto.password() != null) {
+                user.setPassword(updateUserDto.password());
+            }
+
+            userRepository.save(user);
+        }
     }
 
     public void deleteById(String userID) {
